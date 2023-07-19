@@ -1,7 +1,6 @@
-import base64
-import os
 import random
 import urllib
+
 
 def hello(event, context):
 	# read url parameter 'w'
@@ -35,22 +34,22 @@ def hello(event, context):
 	else:
 		weather_type = "good"
 
-	# pick random image from the folder corresponding to the weather type
-	# 1. get the list of files in the folder
-	files = os.listdir("./" + weather_type)
-	# 2. pick a random file
-	file = random.choice(files)
-	# 3. open the file & base64 encode it
-	with open("./" + weather_type + "/" + file, "rb") as image_file:
-		encoded_string = base64.b64encode(image_file.read())
+	# read in all the filepaths from filepaths.txt
+	with open("filepaths.txt", "r") as file:
+		filepaths = file.read().split("\n")
 
+	# filter for only the filepaths that match the weather type
+	filepaths = [filepath for filepath in filepaths if weather_type in filepath]
+	# choose a random filepath
+	filepath = random.choice(filepaths)
+	url = f"https://raw.githubusercontent.com/ExtraE113/leah_birthday/master/leah-birthday-image/{filepath}"
+	print(url)
+	# return temporary redirect to that url
 	response = {
-		"statusCode": 200,
+		"statusCode": 302,
 		"headers": {
-			'Content-Type': 'image/png'
-		},
-		"body": encoded_string,
-		"isBase64Encoded": True
+			"Location": url
+		}
 	}
 
 	return response
