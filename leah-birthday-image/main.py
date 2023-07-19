@@ -9,10 +9,6 @@ PRODUCTION_RUN = True
 
 # Open an Image
 img = Image.open('base.jpg')
-
-# Call draw Method to add 2D graphics in an image
-I1 = ImageDraw.Draw(img)
-
 # get image size
 width, height = img.size
 
@@ -46,7 +42,7 @@ for item in tqdm(categories):
 
 	for poem in poems:
 		# Open an Image
-		img = Image.open('base_old.png')
+		img = Image.open('base.jpg')
 
 		# Call draw Method to add 2D graphics in an image
 		I1 = ImageDraw.Draw(img, "RGBA")
@@ -69,32 +65,33 @@ for item in tqdm(categories):
 		poem = "\n".join(lines)
 		# print(poem)
 
-		grey = 10
+		grey = 0  # todo change back to 10
 		bbox = I1.textbbox((h_text_center, v_text_center), poem,
 						   font=ImageFont.truetype("arial.ttf", int(height * 0.03)), anchor="ma")
-		I1.rectangle(bbox, fill=(255 - grey, 255 - grey, 255 - grey, 25))
+		alpha = 45  # todo change back to 25
+		I1.rectangle(bbox, fill=(255 - grey, 255 - grey, 255 - grey, alpha))
 
 		# having drawn the background that covers the actual text, add a 40 px border on each side blending out to transparent
 		# this is to hide the edges of the background
 		# top
 		size = 100
 		# calculate factor such that the alpha value of the border is 0 at the edge of the background
-		factor = 25 / size
+		factor = alpha / size
 		for i in range(size):
 			I1.rectangle((bbox[0] - i, bbox[1] - i, bbox[2] + i, bbox[1] - i),
-						 fill=(255 - grey, 255 - grey, 255 - grey, 25 - int(i * factor)))
+						 fill=(255 - grey, 255 - grey, 255 - grey, alpha - int(i * factor)))
 		# bottom
 		for i in range(size):
 			I1.rectangle((bbox[0] - i, bbox[3] + i, bbox[2] + i, bbox[3] + i),
-						 fill=(255 - grey, 255 - grey, 255 - grey, 25 - int(i * factor)))
+						 fill=(255 - grey, 255 - grey, 255 - grey, alpha - int(i * factor)))
 		# left
 		for i in range(size):
 			I1.rectangle((bbox[0] - i, bbox[1] - i, bbox[0] - i, bbox[3] + i),
-						 fill=(255 - grey, 255 - grey, 255 - grey, 25 - int(i * factor)))
+						 fill=(255 - grey, 255 - grey, 255 - grey, alpha - int(i * factor)))
 		# right
 		for i in range(size):
 			I1.rectangle((bbox[2] + i, bbox[1] - i, bbox[2] + i, bbox[3] + i),
-						 fill=(255 - grey, 255 - grey, 255 - grey, 25 - int(i * factor)))
+						 fill=(255 - grey, 255 - grey, 255 - grey, alpha - int(i * factor)))
 
 		# Draw the text centered at (h_text_center, v_text_center) sized to have letters 5% of the image's height
 		I1.multiline_text((h_text_center, v_text_center), poem, fill=(grey, grey, grey), anchor='ma',
@@ -102,7 +99,7 @@ for item in tqdm(categories):
 
 		if PRODUCTION_RUN:
 			# Save the edited image
-			filepath = f"imgs/{item.split('.')[0]}/edited{count}.jpg"
+			filepath = f"imgs/{item.split('.')[0]}/edited{count}.png"
 			img.save(filepath)
 			filepaths.append(filepath)
 		else:
