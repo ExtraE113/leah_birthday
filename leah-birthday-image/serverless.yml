@@ -1,0 +1,27 @@
+org: ezrapersonal
+app: leah-birthday-image
+service: leah-birthday-image
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+  apiGateway:
+    binaryMediaTypes:
+      - 'image/png'
+  architecture: arm64
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - httpApi:
+          path: /img
+          method: get
+
+plugins:
+  - serverless-python-requirements
+
+package:
+  exclude:
+    - imgs/**

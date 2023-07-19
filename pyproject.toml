@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "leah-birthday"
+version = "0.1.0"
+description = ""
+authors = ["Ezra <git@ezranewman.com>"]
+readme = "README.md"
+packages = [{include = "leah_birthday"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
